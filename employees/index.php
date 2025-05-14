@@ -24,47 +24,126 @@ if ($_SESSION['is_admin'] == 1) {
         font-family: 'Inter', sans-serif;
         background-color: #f8f9fa;
       }
+
       .welcome-card {
-        background: linear-gradient(135deg, #00897B 0%, #004D40 100%);
+        background: linear-gradient(135deg, #FF6B6B 0%, #556270 100%);
         color: white;
-        border-radius: 15px;
-        padding: 2rem;
-        margin-bottom: 2rem;
+        border-radius: 20px;
+        padding: 2.5rem;
+        margin-bottom: 2.5rem;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
       }
+
+      .welcome-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+        border-radius: 50%;
+        transform: translate(50%, -50%);
+      }
+
+      .welcome-card h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
       .time-card {
         background: white;
-        border-radius: 15px;
+        border-radius: 20px;
         padding: 2rem;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         margin-bottom: 2rem;
-      }
-      .time-display {
-        font-size: 3rem;
-        font-weight: 700;
-        color: #00897B;
         text-align: center;
-        margin: 1rem 0;
+        border: 1px solid rgba(0, 0, 0, 0.05);
       }
+
+      .time-display {
+        font-size: 3.5rem;
+        font-weight: 700;
+        color: #FF6B6B;
+        margin: 1.5rem 0;
+        text-shadow: 0 2px 4px rgba(255, 107, 107, 0.2);
+        font-family: 'Inter', monospace;
+      }
+
       .attendance-card {
         background: white;
-        border-radius: 15px;
+        border-radius: 20px;
         padding: 2rem;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0, 0, 0, 0.05);
       }
+
       .attendance-status {
-        padding: 0.5em 1em;
+        padding: 0.75em 1.5em;
         border-radius: 30px;
-        font-weight: 500;
+        font-weight: 600;
         display: inline-block;
+        font-size: 0.9rem;
       }
+
       .status-success {
         background-color: #4caf50;
         color: white;
+        box-shadow: 0 2px 4px rgba(76, 175, 80, 0.2);
       }
+
       .status-pending {
         background-color: #f44336;
         color: white;
+        box-shadow: 0 2px 4px rgba(244, 67, 54, 0.2);
       }
+
+      .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+
+      .action-button {
+        background: white;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        border-radius: 15px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: #2d3436;
+      }
+
+      .action-button:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        text-decoration: none;
+        color: #2d3436;
+      }
+
+      .action-icon {
+        font-size: 2rem;
+        color: #FF6B6B;
+        margin-bottom: 1rem;
+      }
+
+      .action-title {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      .action-description {
+        font-size: 0.9rem;
+        color: #636e72;
+        margin: 0;
+      }
+
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
     </style>
     <title>Employee Dashboard | Attendance System</title>
@@ -73,8 +152,8 @@ if ($_SESSION['is_admin'] == 1) {
     <?php include 'includes/navbar.php'; ?>
     <div class="container-fluid px-4">
       <div class="welcome-card">
-        <h2><i class="fas fa-user mr-3"></i>Welcome, <?php echo $_SESSION['username']; ?>!</h2>
-        <p class="lead mb-0">Track your attendance and manage your leaves from one place.</p>
+        <h2><i class="fas fa-user-tie mr-3"></i>Welcome, <?php echo $_SESSION['username']; ?>!</h2>
+        <p class="lead mb-0">Track your attendance and manage your leaves efficiently from your personalized dashboard.</p>
       </div>
 
       <div class="row">
@@ -82,7 +161,25 @@ if ($_SESSION['is_admin'] == 1) {
           <div class="time-card">
             <h4><i class="fas fa-clock mr-2"></i>Current Time</h4>
             <div class="time-display" id="txt"></div>
-            <p class="text-center text-muted mb-0">Philippine Standard Time</p>
+            <p class="text-muted mb-0">Philippine Standard Time</p>
+          </div>
+
+          <div class="quick-actions">
+            <a href="file_an_attendance.php" class="action-button">
+              <div class="action-icon">
+                <i class="fas fa-clock"></i>
+              </div>
+              <h5 class="action-title">Record Attendance</h5>
+              <p class="action-description">Log your daily time in/out</p>
+            </a>
+            
+            <a href="file_a_leave.php" class="action-button">
+              <div class="action-icon">
+                <i class="fas fa-calendar-plus"></i>
+              </div>
+              <h5 class="action-title">Request Leave</h5>
+              <p class="action-description">Submit a leave application</p>
+            </a>
           </div>
         </div>
 
